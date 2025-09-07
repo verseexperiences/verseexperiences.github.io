@@ -3,9 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <title>Verse Experiences</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f5f5f5; padding:20px; }
+    .game-card {
+      background:#fff; padding:15px; margin:10px; border-radius:10px; box-shadow:0 2px 5px rgba(0,0,0,0.1);
+    }
+    .title { font-size:20px; margin-bottom:5px; }
+    .stats { color:#555; }
+  </style>
 </head>
 <body>
-  <h1>Welcome to Verse Experiences!</h1>
-  <p>This is my Roblox studio site. More coming soon...</p>
+  <h1>My Roblox Games</h1>
+  <div id="games"></div>
+
+  <script>
+    const universeIds = [ "7688358693", "8554070482" ]; // replace with your Roblox Universe IDs
+
+    fetch("https://games.roblox.com/v1/games?universeIds=" + universeIds.join(","))
+      .then(res => res.json())
+      .then(data => {
+        const gamesDiv = document.getElementById("games");
+        data.data.forEach(game => {
+          gamesDiv.innerHTML += `
+            <div class="game-card">
+              <div class="title">${game.name}</div>
+              <div class="stats">Plays: ${game.visits.toLocaleString()}</div>
+              <a href="https://www.roblox.com/games/${game.rootPlaceId}" target="_blank">Play Game</a>
+            </div>
+          `;
+        });
+      });
+  </script>
 </body>
 </html>
