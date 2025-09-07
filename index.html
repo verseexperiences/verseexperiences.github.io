@@ -1,38 +1,292 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Verse Experiences</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
-    body { font-family: Arial, sans-serif; background:#f5f5f5; padding:20px; }
-    .game-card {
-      background:#fff; padding:15px; margin:10px; border-radius:10px; box-shadow:0 2px 5px rgba(0,0,0,0.1);
+    :root{
+      --bg:#0d0d16; --card:#181828; --gradTop:#121225; --gradBot:#0d0d16;
+      --muted:#9aa3b2; --link:#4ea1ff; --hero:url('hero.jpg'); /* <- replace with your bg image */
     }
-    .title { font-size:20px; margin-bottom:5px; }
-    .stats { color:#555; }
+    *{ box-sizing:border-box }
+    body{ font-family: Inter, system-ui, Arial, sans-serif; background:var(--bg); color:#fff; margin:0 }
+    a{ color:var(--link); text-decoration:none }
+
+    /* Nav */
+    .nav{ position:sticky; top:0; z-index:40; display:flex; align-items:center; justify-content:space-between;
+      padding:12px 20px; background:rgba(0,0,0,.55); backdrop-filter:blur(8px); border-bottom:1px solid rgba(255,255,255,.06);}
+    .brand{ display:flex; align-items:center; gap:10px }
+    .logo {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+.logoBig {
+  width: 64px;   /* 👈 bigger size */
+  height: 64px;
+  border-radius: 8px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+.logo img,
+.logoBig img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+    .brand-name{ font-weight:800 }
+    .navlinks{ display:flex; gap:18px; font-size:14px; color:var(--muted) }
+    .navlinks a{ color:inherit }
+    @media(max-width:700px){ .navlinks{ display:none } }
+
+    /* Hero */
+    .hero{ position:relative; min-height:40vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; overflow:hidden }
+    .hero::before{ content:""; position:absolute; inset:0;
+      background-image:linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,.7)), var(--hero);
+      background-size:cover; background-position:center; }
+    .hero-inner{ position:relative; z-index:1; padding:48px 20px }
+    .hero-title{ font-size:48px; font-weight:900; margin:10px 0 20px; }
+    .cta{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:30px }
+    .btn{ display:inline-flex; align-items:center; padding:12px 16px; border-radius:10px; background:rgba(24,24,40,.6); border:1px solid rgba(255,255,255,.14); font-weight:700; }
+    .btn.primary {
+  background:#3b82f6;     /* solid blue */
+  color:#fff;             /* white text */
+  border: none;           /* clean edges */
+  font-weight:700;
+  transition: background .2s ease, transform .15s ease;
+}
+.btn.primary:hover {
+  background:#2563eb;     /* darker blue on hover */
+  transform: translateY(-2px);
+}
+
+    /* Stats in Hero */
+    .stats-box{ display:flex; gap:24px; justify-content:center; align-items:center;
+      background: rgba(13,13,22,0.8); border-radius:16px; padding:18px 28px; margin:0 auto;
+      box-shadow:0 8px 40px rgba(0,0,0,.45); border:1px solid rgba(255,255,255,.06); max-width:800px }
+    .stat{ flex:1; text-align:center }
+    .number{ font-size:38px; font-weight:800 }
+    .label{ margin-top:4px; font-size:14px; color:var(--muted) }
+
+    /* Content */
+    .container{ padding:32px; max-width:1150px; margin:0 auto }
+    #games{ display:grid; grid-template-columns: repeat(auto-fill,minmax(280px,1fr)); gap:16px }
+    .game-card{ background: var(--card); border-radius:12px; padding:14px; display:grid; grid-template-columns:96px 1fr; gap:12px; align-items:center }
+    .thumb-wrap{ width:96px; height:96px; border-radius:10px; overflow:hidden; background:#0f0f1c }
+    .thumb{ width:100%; height:100%; object-fit:cover }
+    .title{ font-size:18px; font-weight:700; margin:0 0 4px }
+    .rows{ color:var(--muted); font-size:14px }
+    .row{ display:flex; justify-content:space-between; margin-top:4px }
+    .error{ color:#ff6b6b }
+    .subtle{ color:var(--muted); font-size:12px; margin:16px 0 }
+
+    @media(max-width:700px){
+      .hero-title{ font-size:34px }
+      .stats-box{ flex-direction:column; gap:12px }
+      .game-card{ grid-template-columns:80px 1fr }
+      .thumb-wrap{ width:80px; height:80px }
+    }
   </style>
 </head>
 <body>
-  <h1>My Roblox Games</h1>
-  <div id="games"></div>
+
+  <nav class="nav">
+    <div class="brand">
+      <div class="logo">
+  <img src="logo.png" alt="Verse Experiences Logo">
+</div>
+      <div class="brand-name">Verse Experiences</div>
+    </div>
+    <div class="navlinks">
+      <a href="#">Home</a><a href="#games">Our Games</a><a href="#about">About</a><a href="#contact">Contact</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="brand" style="justify-content:center; gap:12px">
+        <div class="logoBig">
+  <img src="logo.png" alt="Verse Experiences Logo">
+</div>
+        <h1 class="hero-title">Verse Experiences</h1>
+      </div>
+      <div class="cta">
+        <a class="btn primary" href="#games">Explore our games</a>
+      </div>
+      <!-- Stats OVER hero -->
+      <div class="stats-box">
+        <div class="stat"><div class="number" id="totalPlayers">0</div><div class="label">Players (live)</div></div>
+        <div class="stat"><div class="number" id="totalVisits">0</div><div class="label">Plays</div></div>
+        <div class="stat"><div class="number" id="totalGames">0</div><div class="label">Games</div></div>
+      </div>
+    </div>
+  </section>
+
+  <main class="container">
+    <div class="subtle" id="lastUpdated">Updating…</div>
+    <div id="games">Loading…</div>
+  </main>
 
   <script>
-    const universeIds = [ "7688358693", "8554070482" ]; // replace with your Roblox Universe IDs
+  const universeIds = ["7688358693","8554070482","8103533185","6589949997"]
+  const comma = (n)=> (Number(n)||0).toLocaleString();
+  const shortNumber = (n) => {
+  n = Number(n) || 0;
+  if (n >= 1_000_000_000) return (n/1_000_000_000).toFixed(1).replace(/\.0$/,'') + "b";
+  if (n >= 1_000_000)     return (n/1_000_000).toFixed(1).replace(/\.0$/,'') + "m";
+  if (n >= 1_000)         return (n/1_000).toFixed(1).replace(/\.0$/,'') + "k";
+  return n.toString();
+};
 
-    fetch("https://games.roblox.com/v1/games?universeIds=" + universeIds.join(","))
-      .then(res => res.json())
-      .then(data => {
-        const gamesDiv = document.getElementById("games");
-        data.data.forEach(game => {
-          gamesDiv.innerHTML += `
-            <div class="game-card">
-              <div class="title">${game.name}</div>
-              <div class="stats">Plays: ${game.visits.toLocaleString()}</div>
-              <a href="https://www.roblox.com/games/${game.rootPlaceId}" target="_blank">Play Game</a>
-            </div>
-          `;
-        });
-      });
-  </script>
-</body>
-</html>
+  // visits per second per CCU (from your rule: 400 CCU ≈ 1.2 v/s)
+  const VISITS_PER_SEC_PER_CCU = 1 / 450; // 0.003
+
+  let prevPolledVisits = null;   // last true total from API
+  let displayedVisits  = null;   // what's on screen
+  let visitTickerRAF   = null;   // rAF handle
+  let visitTickerRunning = false;
+
+  // Smoothly animate `incTotal` over `durationMs` (default 60s)
+  function startVisitTicker(incTotal, durationMs = 60000) {
+    if (visitTickerRAF) cancelAnimationFrame(visitTickerRAF);
+    visitTickerRunning = false;
+
+    if (!incTotal || incTotal <= 0) return; // nothing to animate
+
+    const start = performance.now();
+    const base  = displayedVisits;
+    const target = base + incTotal;
+
+    visitTickerRunning = true;
+
+    const step = (now) => {
+      if (!visitTickerRunning) return;
+
+      const t = Math.min((now - start) / durationMs, 1);
+      const eased = t; // linear; change to ease if you like
+      const value = Math.floor(base + eased * incTotal);
+
+      if (value !== displayedVisits) {
+        displayedVisits = value;
+        const el = document.getElementById("totalVisits");
+        if (el) el.textContent = comma(displayedVisits);
+      }
+
+      if (t < 1) {
+        visitTickerRAF = requestAnimationFrame(step);
+      } else {
+        displayedVisits = target;
+        const el = document.getElementById("totalVisits");
+        if (el) el.textContent = comma(displayedVisits);
+        visitTickerRunning = false;
+      }
+    };
+
+    visitTickerRAF = requestAnimationFrame(step);
+  }
+
+  async function fetchGames(){
+    const res = await fetch("https://games.roproxy.com/v1/games?universeIds="+universeIds.join(","), {cache:"no-store"});
+    if(!res.ok) throw new Error("HTTP "+res.status);
+    return res.json();
+  }
+
+  async function fetchThumbs(){
+    const res = await fetch(
+      "https://thumbnails.roproxy.com/v1/games/icons?universeIds="+universeIds.join(",")+
+      "&size=512x512&format=Png&isCircular=false",
+      {cache:"no-store"}
+    );
+    if(!res.ok) throw new Error("HTTP "+res.status);
+    return res.json();
+  }
+
+  function byId(arr,key="id"){const m=new Map();(arr||[]).forEach(x=>m.set(x[key],x));return m;}
+
+  function render(gamesData, thumbsData){
+  const gamesDiv = document.getElementById("games");
+  let totalVisitsNow = 0, totalPlayers = 0;
+  const thumbMap = byId(thumbsData.data || [], "targetId");
+
+  // 🔽 Sort by active users (descending). Tie-break by visits, then name.
+  const gamesSorted = [...(gamesData.data || [])].sort((a, b) => {
+    const pa = a.playing || 0, pb = b.playing || 0;
+    if (pb !== pa) return pb - pa;
+    const va = a.visits || 0, vb = b.visits || 0;
+    if (vb !== va) return vb - va;
+    return (a.name || "").localeCompare(b.name || "");
+  });
+
+  gamesDiv.innerHTML = "";
+  gamesSorted.forEach(game => {
+    totalVisitsNow += game.visits || 0;
+    totalPlayers   += game.playing || 0;
+
+    const imgUrl = thumbMap.get(game.id)?.imageUrl || "";
+    gamesDiv.innerHTML += `
+      <div class="game-card">
+        <div class="thumb-wrap"><img class="thumb" src="${imgUrl}" alt="${game.name} thumbnail"/></div>
+        <div>
+          <div class="title">${game.name}</div>
+          <div class="rows">
+            <div class="row"><span>Plays</span><span>${shortNumber(game.visits)}+</span></div>
+            <div class="row"><span>Active</span><span>${comma(game.playing)}</span></div>
+            <div class="row"><a href="https://www.roblox.com/games/${game.rootPlaceId}" target="_blank" rel="noopener">Play</a></div>
+          </div>
+        </div>
+      </div>`;
+  });
+
+  document.getElementById("totalPlayers").textContent = comma(totalPlayers);
+  document.getElementById("totalGames").textContent   = gamesSorted.length;
+
+    const visitsEl = document.getElementById("totalVisits");
+
+    if (prevPolledVisits === null) {
+      // First load: estimate last-minute growth from CCU and start animating immediately
+      const estVisitsPerSec = totalPlayers * VISITS_PER_SEC_PER_CCU;
+      const estDelta = Math.max(1, Math.round(estVisitsPerSec * 60)); // ≈ last-minute visits
+      displayedVisits = Math.max(0, totalVisitsNow - estDelta);       // show as if 1 min behind
+      prevPolledVisits = totalVisitsNow;                               // anchor for the next real poll
+      if (visitsEl) visitsEl.textContent = comma(displayedVisits);
+      startVisitTicker(estDelta, 60000);                               // animate to current real total
+    } else {
+      // Subsequent loads: use actual delta from API across the next minute
+      const delta = Math.max(0, totalVisitsNow - prevPolledVisits);
+      prevPolledVisits = totalVisitsNow;
+      // displayedVisits already equals whatever was on screen; add the real delta over 60s
+      startVisitTicker(delta, 60000);
+    }
+
+    document.getElementById("lastUpdated").textContent =
+      `Last updated ${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`;
+  }
+
+  async function load(){
+    try{
+      const [g,t] = await Promise.all([fetchGames(), fetchThumbs()]);
+      render(g,t);
+    }catch(e){
+      console.error(e);
+      document.getElementById("games").innerHTML = "<div class='error'>Failed to load</div>";
+    }
+  }
+
+  // Keep DOM in sync if tab visibility changes
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && displayedVisits != null) {
+      const el = document.getElementById("totalVisits");
+      if (el) el.textContent = comma(displayedVisits);
+    }
+  });
+
+  load();
+  setInterval(load, 60000); // poll real totals each minute
+</script>
