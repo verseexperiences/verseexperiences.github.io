@@ -352,11 +352,18 @@
     document.getElementById("totalGames").textContent   = gamesSorted.length;
 
     const visitsEl = document.getElementById("totalVisits");
-    if (visitsEl) {
-  visitsEl.textContent = comma(totalVisitsNow) + "+";
+    if (prevPolledVisits === null) {
+  const estVisitsPerSec = totalPlayers * VISITS_PER_SEC_PER_CCU;
+  const estDelta = Math.max(1, Math.round(estVisitsPerSec * 60));
+  displayedVisits = Math.max(0, totalVisitsNow - estDelta);
+  prevPolledVisits = totalVisitsNow;
+  if (visitsEl) visitsEl.textContent = comma(displayedVisits);
+  startVisitTicker(estDelta, 60000);
+} else {
+  const delta = Math.max(0, totalVisitsNow - prevPolledVisits);
+  prevPolledVisits = totalVisitsNow;
+  startVisitTicker(delta, 60000);
 }
-prevPolledVisits = totalVisitsNow;
-displayedVisits = totalVisitsNow;
 
     document.getElementById("lastUpdated").textContent =
       `Last updated ${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`;
