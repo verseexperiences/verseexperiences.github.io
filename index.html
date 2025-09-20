@@ -323,7 +323,7 @@
       const visitsShort = shortNumber(game.visits) + "+";
       const released = fmtDate(game.created || game.updated);
 
-      gamesDiv.insertAdjacentHTML("beforeend", `
+      gamesDiv.insertAdjacentHTML("beforeend", ` 
         <article class="game">
           <div class="cover">
             <img src="${imgUrl}" alt="${game.name} cover">
@@ -353,7 +353,7 @@
 
     const visitsEl = document.getElementById("totalVisits");
     if (visitsEl) {
-  visitsEl.textContent = shortNumber(totalVisitsNow) + "+";
+  visitsEl.textContent = comma(totalVisitsNow) + "+";
 }
 prevPolledVisits = totalVisitsNow;
 displayedVisits = totalVisitsNow;
@@ -375,7 +375,7 @@ displayedVisits = totalVisitsNow;
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden && displayedVisits != null) {
       const el = document.getElementById("totalVisits");
-      if (el) el.textContent = shortNumber(displayedVisits);
+      if (el) el.textContent = comma(displayedVisits);
     }
   });
 
