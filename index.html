@@ -238,6 +238,23 @@
 </footer>
 
   <script>
+  const WORKER_BASE = "https://api.verseexperiences.workers.dev/proxy?url=";
+
+  async function fetchJSONWithFallback(url) {
+    // 1) Try direct to Roblox
+    try {
+      const r1 = await fetch(url, { cache: "no-store" });
+      if (r1.ok) return r1.json();
+      // if Roblox returns a non-2xx, still try the proxy
+    } catch (_) { /* network/CORS issue → fall back */ }
+
+    // 2) Fall back to your Worker proxy
+    const proxied = WORKER_BASE + encodeURIComponent(url);
+    const r2 = await fetch(proxied, { cache: "no-store" });
+    if (!r2.ok) throw new Error("HTTP " + r2.status);
+    return r2.json();
+  }
+
   /* === data/logic (kept) === */
   const universeIds = ["7688358693","8554070482","8103533185","8161396734", "6589949997"]; // 6589949997
   const comma = (n)=> (Number(n)||0).toLocaleString();
@@ -281,18 +298,16 @@
     visitTickerRAF = requestAnimationFrame(step);
   }
 
-  async function fetchGames(){
-    const res = await fetch("https://games.roproxy.com/v1/games?universeIds="+universeIds.join(","), {cache:"no-store"});
-    if(!res.ok) throw new Error("HTTP "+res.status);
-    return res.json();
+  async function fetchGames() {
+    const url = "https://games.roblox.com/v1/games?universeIds=" + universeIds.join(",");
+    return fetchJSONWithFallback(url);
   }
-  async function fetchThumbs(){
-    const res = await fetch(
-      "https://thumbnails.roproxy.com/v1/games/icons?universeIds="+universeIds.join(",")+
-      "&size=512x512&format=Png&isCircular=false", {cache:"no-store"}
-    );
-    if(!res.ok) throw new Error("HTTP "+res.status);
-    return res.json();
+ async function fetchThumbs() {
+    const url =
+      "https://thumbnails.roblox.com/v1/games/icons?universeIds=" +
+      universeIds.join(",") +
+      "&size=512x512&format=Png&isCircular=false";
+    return fetchJSONWithFallback(url);
   }
   function byId(arr,key="id"){const m=new Map();(arr||[]).forEach(x=>m.set(x[key],x));return m;}
 
